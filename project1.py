@@ -14,6 +14,8 @@ matrix = [
     ['-', '-', '-']
 ]
 
+# player1 = input("Please select either X or O to start: ")
+
 # Board display 
 def display():
     for row in range(3):
@@ -26,10 +28,6 @@ def position(row, column, player): #(row, column, player character)
     row = int(row)
     column = int(column)
     
-    if matrix[row][column] == 'X' or matrix[row][column] == 'O': 
-        print("Position already filled.")
-        return ticTacToe()
-
     if matrix[row][column] == '-':
         matrix[row][column] = player
 
@@ -99,63 +97,39 @@ def ticTacToe():
     column = 'y'
     withinRange = False 
     gameEnded = False
+    currentPlayer = 0
     
     while withinRange == False and gameEnded == False:
-        if count%2 == 0:
-            print("PLAYER 1")
-            turn = player[0]
-            row = input("Please select a row (0, 1, 2): ")
-            column = input("Please select a column (0, 1, 2): ")
-
-            if row.isdigit() == False or column.isdigit() == False: 
-                print("Sorry that's not a digit!")
-            
-            if row.isdigit() == True and column.isdigit() == True: 
-                if int(row) in range(3) and int(column) in range(3):
-                    withinRange = True
-                    position(row, column, turn)
-                    count += 1
-                    display()
-                    if checkBoard(turn) == 9: 
-                        gameEnded = True
-                        resetGame()
-                        break
-                else: 
-                    print("Sorry, you're out of range")
-                    pass
-    
-                withinRange = False
-
-        if count%2 == 1:
-            print("PLAYER 2")
-            turn = player[1]
-            row = input("Please select a row (0, 1, 2): ")
-            column = input("Please select a column (0, 1, 2): ")
-
-            if row.isdigit() == False or column.isdigit() == False: 
-                print("Sorry that's not a digit!")
-            
-            if row.isdigit() == True and column.isdigit() == True: 
-                if int(row) in range(3) and int(column) in range(3):
-                    if matrix[int(row)][int(column)] == 'X' or matrix[int(row)][int(column)] == 'O': 
-                        print("Position already filled.")
-                        display()
-                        pass
-                    else:
-                        withinRange = True
-                        position(row, column, turn)
-                        count += 1
-                        display()
-                        if checkBoard(turn) == 9: 
-                            gameEnded = True
-                            resetGame()
-                            break
-                else: 
-                    print("Sorry, you're out of range")
-                    pass
-    
-                withinRange = False
+        currentPlayer = 0 if count%2 == 0 else 1 
+        print(f"PLAYER {currentPlayer + 1}")
         
+        turn = player[currentPlayer]
+        row = input("Please select a row (0, 1, 2): ")
+        column = input("Please select a column (0, 1, 2): ")
+
+        if row.isdigit() == False or column.isdigit() == False: 
+            print("Sorry that's not a digit!")
+            continue
+
+        if int(row) not in range(3) or int(column) not in range(3):
+            print("Sorry, you're out of range")
+            continue
+
+        if matrix[int(row)][int(column)] == 'X' or matrix[int(row)][int(column)] == 'O': 
+            print("Position already filled.")
+            display()
+            continue
+                    
+        withinRange = True
+        position(row, column, turn)
+        count += 1
+        display()
+        if checkBoard(turn) == 9: 
+            gameEnded = True
+            resetGame()
+            break
+        withinRange = False
+
     return gameEnded 
 
 def start(): 
